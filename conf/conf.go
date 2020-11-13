@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/spf13/viper"
 	"os"
+	"time"
 )
 
 type Configuration struct {
@@ -14,8 +15,8 @@ type Configuration struct {
 	}
 	Server struct{
 		HttpPort int `json:"http_port"`
-		ReadTimeout int `json:"read_timeout"`
-		WriteTimeout int `json:"write_timeout"`
+		ReadTimeout time.Duration `json:"read_timeout"`
+		WriteTimeout time.Duration `json:"write_timeout"`
 	}
 	Database struct{
 		Driver string `json:"driver"`
@@ -54,5 +55,9 @@ func Config() *Configuration {
 		os.Exit(1)
 	}
 	fmt.Println("Configuration.conf", conf)
+
+	conf.Server.ReadTimeout = conf.Server.ReadTimeout * time.Second
+	conf.Server.WriteTimeout = conf.Server.WriteTimeout * time.Second
+
 	return conf
 }
