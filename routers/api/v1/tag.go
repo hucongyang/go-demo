@@ -11,6 +11,11 @@ import (
 	"net/http"
 )
 
+// @Summary 获取文章标签
+// @Produce  json
+// @Param name query string true "Name"
+// @Success 200 {string} gin.H "{"code":200,"data":{},"msg":"ok"}"
+// @Router /api/v1/tags [get]
 // 获取多个文章标签
 func GetTags(c *gin.Context) {
 	name := c.DefaultQuery("name", "")
@@ -37,6 +42,13 @@ func GetTags(c *gin.Context) {
 	})
 }
 
+// @Summary 新增文章标签
+// @Produce  json
+// @Param name query string true "Name"
+// @Param state query int false "State"
+// @Param created_by query int false "CreatedBy"
+// @Success 200 {string} gin.H "{"code":200,"data":{},"msg":"ok"}"
+// @Router /api/v1/tags [post]
 // 新增文章标签
 func AddTag(c *gin.Context) {
 	name := c.Query("name")

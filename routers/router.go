@@ -3,13 +3,15 @@ package routers
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/hucongyang/go-demo/conf"
+	_ "github.com/hucongyang/go-demo/docs" // 这里不写，swagger运行会报错
 	"github.com/hucongyang/go-demo/middleware/jwt"
 	"github.com/hucongyang/go-demo/routers/api"
 	v1 "github.com/hucongyang/go-demo/routers/api/v1"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 // 路由文件
-
 func InitRouter() *gin.Engine {
 	router := gin.New()
 
@@ -18,6 +20,9 @@ func InitRouter() *gin.Engine {
 	router.Use(gin.Recovery())
 
 	gin.SetMode(conf.Config().RunMode)
+
+	// 增加swagger文档
+	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	// 获取token凭证
 	router.GET("/auth", api.GetAuth)
