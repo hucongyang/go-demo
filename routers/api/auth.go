@@ -9,6 +9,7 @@ import (
 
 	"github.com/hucongyang/go-demo/models"
 	"github.com/hucongyang/go-demo/pkg/errorCode"
+	"github.com/hucongyang/go-demo/pkg/logging"
 	"github.com/hucongyang/go-demo/pkg/util"
 )
 
@@ -48,6 +49,9 @@ func GetAuth(c *gin.Context) {
 			log.Println(err.Key, err.Message)
 		}
 	}
+
+	// 自定义log文件使用
+	logging.Info(username, password, code, errorCode.GetMessage(code))
 
 	c.JSON(http.StatusOK, gin.H{
 		"code": code,
