@@ -14,7 +14,7 @@ database:
   driver: mysql
   user: root
   password: root
-  host: 0.0.0.0
+  host: laradock_mysql
   port: 3306
   name: blog
   tablePrefix: blog_
