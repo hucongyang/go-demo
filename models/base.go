@@ -2,6 +2,7 @@ package models
 
 import (
 	"fmt"
+	_ "github.com/go-sql-driver/mysql"
 	"github.com/jinzhu/gorm"
 	"log"
 
@@ -14,12 +15,12 @@ var db *gorm.DB
 var err error
 
 type GORMBase struct {
-	ID			int 	`json:"id" gorm:"primary_key"`
-	CreatedOn	int64 	`json:"created_on"`
-	ModifiedOn	int64 	`json:"modified_on"`
+	ID         int   `json:"id" gorm:"primary_key"`
+	CreatedOn  int64 `json:"created_on"`
+	ModifiedOn int64 `json:"modified_on"`
 }
 
-func init()  {
+func init() {
 	database := conf.Config().Database
 	db, err = gorm.Open(database.Driver, fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8&parseTime=True&loc=Local",
 		database.User,
@@ -40,6 +41,6 @@ func init()  {
 	db.DB().SetMaxOpenConns(100)
 }
 
-func CloseDB()  {
+func CloseDB() {
 	defer db.Close()
 }
