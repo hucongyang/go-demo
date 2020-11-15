@@ -23,4 +23,7 @@ redis:
   addr: 0.0.0.0:6379
   password:
   db: 0
+  maxIdle: 30
+  maxActive: 30
+  idleTimeout: 200
 

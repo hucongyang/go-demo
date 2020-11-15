@@ -3,12 +3,15 @@ package v1
 import (
 	"github.com/astaxie/beego/validation"
 	"github.com/gin-gonic/gin"
-	"github.com/hucongyang/go-demo/conf"
-	"github.com/hucongyang/go-demo/models"
-	"github.com/hucongyang/go-demo/pkg/errorCode"
-	"github.com/hucongyang/go-demo/pkg/util"
+	"github.com/hucongyang/go-demo/service/tag_service"
 	"github.com/unknwon/com"
 	"net/http"
+
+	"github.com/hucongyang/go-demo/conf"
+	"github.com/hucongyang/go-demo/models"
+	"github.com/hucongyang/go-demo/pkg/app"
+	"github.com/hucongyang/go-demo/pkg/errorCode"
+	"github.com/hucongyang/go-demo/pkg/util"
 )
 
 // @Summary 获取文章标签
@@ -18,28 +21,33 @@ import (
 // @Router /api/v1/tags [get]
 // 获取多个文章标签
 func GetTags(c *gin.Context) {
+	appGin := app.Gin{C: c}
 	name := c.DefaultQuery("name", "")
-
-	maps := make(map[string]interface{})
-	data := make(map[string]interface{})
-
-	if name != "" {
-		maps["name"] = name
+	valid := validation.Validation{}
+	valid.Required(name, "name").Message("name不能为空")
+	if valid.HasErrors() {
+		app.MarkErrors(valid.Errors)
+		appGin.Response(http.StatusOK, errorCode.INVALID_PARAMS, nil)
+		return
 	}
 
-	var state int = -1
-	if arg := c.Query("state"); arg != "" {
-		state = com.StrTo(arg).MustInt()
-		maps["state"] = state
+	tagService := tag_service.Tag{Name: name}
+	exists, err := tagService.ExistByName()
+	if err != nil {
+		appGin.Response(http.StatusOK, errorCode.ERROR_CHECK_EXIST_TAG_FAIL, nil)
+		return
 	}
-	code := errorCode.SUCCESS
-	data["lists"] = models.GetTags(util.GetPage(c), conf.Config().App.PageSize, maps)
-	data["total"] = models.GetTagTotal(maps)
-	c.JSON(http.StatusOK, gin.H{
-		"code": code,
-		"msg":  errorCode.GetMessage(code),
-		"data": data,
-	})
+	if !exists {
+		appGin.Response(http.StatusOK, errorCode.ERROR_NOT_EXIST_TAG, nil)
+		return
+	}
+
+	tag, err := tagService.GetAll()
+	if err != nil {
+		appGin.Response(http.StatusOK, errorCode.ERROR_GET_TAG_FAIL, nil)
+		return
+	}
+	appGin.Response(http.StatusOK, errorCode.SUCCESS, tag)
 }
 
 // @Summary 新增文章标签
