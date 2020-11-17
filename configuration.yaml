@@ -14,13 +14,13 @@ database:
   driver: mysql
   user: root
   password: root
-  host: laradock_mysql
+  host: 0.0.0.0
   port: 3306
   name: blog
   tablePrefix: blog_
 
 redis:
-  addr: 0.0.0.0:6379
+  addr: 127.0.0.1:6379
   password:
   db: 0
   maxIdle: 30

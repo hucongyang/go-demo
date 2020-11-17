@@ -9,6 +9,7 @@ var MsgFlags = map[int]string{
 	ERROR_NOT_EXIST_TAG:        "该标签不存在",
 	ERROR_CHECK_EXIST_TAG_FAIL: "标签错误",
 	ERROR_GET_TAG_FAIL:         "获取标签错误",
+	ERROR_ADD_TAG_FAIL:         "创建标签失败",
 
 	ERROR_NOT_EXIST_ARTICLE: "该文章不存在",
 

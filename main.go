@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/hucongyang/go-demo/pkg/gredis"
 	"log"
 	_ "net/http"
 	"syscall"
@@ -14,11 +15,12 @@ import (
 
 func main() {
 	// 新版本服务：优雅的重启服务
-	conf := conf.Config()
-	endless.DefaultReadTimeOut = conf.Server.ReadTimeout
-	endless.DefaultWriteTimeOut = conf.Server.WriteTimeout
+	_ = gredis.Setup()
+	config := conf.Config()
+	endless.DefaultReadTimeOut = config.Server.ReadTimeout
+	endless.DefaultWriteTimeOut = config.Server.WriteTimeout
 	endless.DefaultMaxHeaderBytes = 1 << 20
-	endPoint := fmt.Sprintf(":%d", conf.Server.HttpPort)
+	endPoint := fmt.Sprintf(":%d", config.Server.HttpPort)
 
 	router := routers.InitRouter()
 	server := endless.NewServer(endPoint, router)
@@ -32,12 +34,12 @@ func main() {
 
 	// 老版本服务
 	//router := routers.InitRouter()
-	//conf := conf.Config()
+	//config := config.Config()
 	//server := &http.Server{
-	//	Addr: fmt.Sprintf(":%d", conf.Server.HttpPort),
+	//	Addr: fmt.Sprintf(":%d", config.Server.HttpPort),
 	//	Handler: router,
-	//	ReadTimeout: conf.Server.ReadTimeout,
-	//	WriteTimeout: conf.Server.WriteTimeout,
+	//	ReadTimeout: config.Server.ReadTimeout,
+	//	WriteTimeout: config.Server.WriteTimeout,
 	//	MaxHeaderBytes: 1 << 20,
 	//}
 	//server.ListenAndServe()

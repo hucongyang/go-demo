@@ -53,7 +53,7 @@ func (t *Tag) GetAll() ([]models.Tag, error) {
 			return cacheTags, nil
 		}
 	}
-
+	logging.Info("getMaps:", t.getMaps())
 	tags, err := models.GetTags(t.PageNum, t.PageSize, t.getMaps())
 	if err != nil {
 		return nil, err
@@ -68,7 +68,7 @@ func (t *Tag) getMaps() map[string]interface{} {
 	if t.Name != "" {
 		maps["name"] = t.Name
 	}
-	if t.State >= 0 {
+	if t.State > 0 {
 		maps["state"] = t.State
 	}
 	return maps
